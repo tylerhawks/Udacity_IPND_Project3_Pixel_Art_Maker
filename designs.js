@@ -1,37 +1,32 @@
-// Take user input to create the grid
-$("#sizePicker").submit(function(event) {
-  // turn off the default action of the submit button
+// collect user input for canvas size and call makeGrid
+$("input[type='submit']").on("click", function(event) {
+  // block default submit button functionality
   event.preventDefault();
-  // get grid dimensions from input
-  height = $("#inputHeight").val();
-  width = $("#inputWidth").val();
-  // build grid
-  makeGrid(height, width);
-})
+  // set height and width variables using user input
+  let rows = $("#inputHeight").val();
+  let cols = $("#inputWidth").val();
+  // build the canvas
+  makeGrid(rows, cols);
+});
 
-function makeGrid(height, width) {
-  // clear old grid
-  $("tr").remove();
+// color tds when user clicks on the canvas
+$("#pixelCanvas").on("click", "td", function() {
+  // assign user input to variable
+  let color = $("#colorPicker").val()
+  // apply selected color to the box clicked on
+  $(this).css("background-color", color);
+});
 
-  // loop through value of inputHeight to add rows
-  for (var row = 1; row <= height; row++) {
-    $("#pixelCanvas").append("<tr id=table" + row + "></tr>");
-    // loop through value of inputWidth to add columns
-    for (var col = 1; col <= width; col++) {
-      $("#table" + row).append("<td></td>");
+//  build the canvas using height and width values collected above
+function makeGrid(rows, cols) {
+  // clear any previous canvases
+  $("#pixelCanvas").empty();
+  // loop through value of height to create rows
+  for (let height = 0; height < rows; height++) {
+    $("#pixelCanvas").append("<tr></tr>")
+    // loop through value of width to create tds in each row. ie columns
+    for (let width = 0; width < cols; width++) {
+      $("tr").last().append($("<td></td>"));
     }
   }
-
-  // Apply selected color to square
-  $("td").click(function() {
-    color = $("#colorPicker").val();
-    // clear any existing colors - allows romoving color with second click
-    if ($(this).attr("style")) {
-      $(this).removeAttr("style");
-    // apply new colors
-    } else {
-      $(this).attr("style", "background-color:" + color);
-    }
-  })
-
 }
